@@ -2,6 +2,27 @@
     <head>
         <script type="module" src="/src/main.js"></script>
     </head>
+
+    <script>
+        window.hotModules = {};
+
+        const ws = new window.WebSocket("ws://localhost:8085");
+        ws.addEventListener("message", (msg) => {
+            console.log(msg);
+            const payload = JSON.parse(msg.data);
+            try {
+                const { type, file } = payload;
+                if (type == "file-changed") {
+                    Object.values(window.hotModules).forEach((mod) => {
+                        mod.fileChanged();
+                    });
+                }
+            } catch (e) {
+                console.error(e);
+            }
+        });
+    </script>
+
     <body>
         <div id="content"></div>
     </body>
