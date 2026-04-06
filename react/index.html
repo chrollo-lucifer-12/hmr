@@ -1,0 +1,22 @@
+<!doctype html>
+<html lang="en">
+    <head>
+        <script type="module" src="./src/main.js"></script>
+    </head>
+    <script>
+        window.hotModules = {};
+        const ws = new window.WebSocket("ws://localhost:3000");
+        ws.addEventListener("message", (msg) => {
+            const payload = JSON.parse(msg.data);
+            console.log(payload);
+            if (payload.type === "file-changed") {
+                Object.values(window.hotModules).forEach((mod) => {
+                    mod.fileChanged();
+                });
+            }
+        });
+    </script>
+    <body>
+        <div id="root"></div>
+    </body>
+</html>
